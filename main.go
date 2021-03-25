@@ -10,12 +10,12 @@ import (
 	"github.com/xivapi/godestone/v2"
 )
 
-var characterCount int = 400
+var characterCount int = 2000
 var parallelism int = 8
 
 type IDCreationInfo struct {
 	ID        uint32    `csv:"id"`
-	CreatedAt time.Time `csv:"createdAt"`
+	CreatedAt time.Time `csv:"created_at"`
 }
 
 func getCreationInfos(scraper *godestone.Scraper, ids chan uint32, done chan []*IDCreationInfo) {
