@@ -9,18 +9,17 @@ import (
 	"github.com/xivapi/godestone/v2"
 )
 
+var characterCount int = 400
+var parallelism int = 4
+
 type IDCreationInfo struct {
-	ID        uint64    `csv:"id"`
+	ID        uint32    `csv:"id"`
 	CreatedAt time.Time `csv:"createdAt"`
 }
 
-func main() {
-	bin := bingode.New()
-	scraper := godestone.NewScraper(bin, godestone.EN)
-
+func getCreationInfos(scraper *godestone.Scraper, ids chan uint32, done chan []*IDCreationInfo) {
 	creationInfo := make([]*IDCreationInfo, 0)
-
-	for i := uint32(1); i <= 400; i++ {
+	for i := range ids {
 		acc, _, err := scraper.FetchCharacterAchievements(i)
 		if err == nil {
 			oldest := time.Now()
@@ -34,11 +33,39 @@ func main() {
 
 			if hasAny {
 				creationInfo = append(creationInfo, &IDCreationInfo{
-					ID:        1,
+					ID:        i,
 					CreatedAt: oldest,
 				})
 			}
 		}
+	}
+	done <- creationInfo
+}
+
+func main() {
+	bin := bingode.New()
+	scraper := godestone.NewScraper(bin, godestone.EN)
+
+	charsPerGoroutine := characterCount / parallelism
+
+	creationInfo := make([]*IDCreationInfo, 0)
+	creationInfoChans := make([]chan []*IDCreationInfo, parallelism)
+	for i := 0; i < parallelism; i++ {
+		idChan := make(chan uint32, charsPerGoroutine)
+		creationInfoChans[i] = make(chan []*IDCreationInfo, 1)
+
+		go getCreationInfos(scraper, idChan, creationInfoChans[i])
+
+		for j := 1 + i*charsPerGoroutine; j <= 1+(i+1)*charsPerGoroutine; j++ {
+			idChan <- uint32(j)
+		}
+		close(idChan)
+	}
+
+	for i := 0; i < parallelism; i++ {
+		curCreationInfo := <-creationInfoChans[i]
+		close(creationInfoChans[i])
+		creationInfo = append(creationInfo, curCreationInfo...)
 	}
 
 	b, err := csvutil.Marshal(creationInfo)
