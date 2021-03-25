@@ -12,6 +12,7 @@ import (
 
 var characterCount int = 20000
 var parallelism int = 10
+var sampleRate int = 10
 
 type Time struct {
 	time.Time
@@ -58,7 +59,7 @@ func main() {
 	bin := bingode.New()
 	scraper := godestone.NewScraper(bin, godestone.EN)
 
-	charsPerGoroutine := characterCount / parallelism
+	charsPerGoroutine := characterCount / parallelism * sampleRate
 
 	creationInfo := make([]*IDCreationInfo, 0)
 	creationInfoChans := make([]chan []*IDCreationInfo, parallelism)
@@ -68,7 +69,7 @@ func main() {
 
 		go getCreationInfos(scraper, idChan, creationInfoChans[i])
 
-		for j := 1 + i*charsPerGoroutine; j <= (i+1)*charsPerGoroutine; j++ {
+		for j := 1 + i*charsPerGoroutine; j <= (i+1)*charsPerGoroutine; j += sampleRate {
 			idChan <- uint32(j)
 		}
 		close(idChan)
