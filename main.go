@@ -1,7 +1,8 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
 	"time"
 
 	"github.com/jszwec/csvutil"
@@ -10,7 +11,7 @@ import (
 )
 
 var characterCount int = 400
-var parallelism int = 4
+var parallelism int = 8
 
 type IDCreationInfo struct {
 	ID        uint32    `csv:"id"`
@@ -56,7 +57,7 @@ func main() {
 
 		go getCreationInfos(scraper, idChan, creationInfoChans[i])
 
-		for j := 1 + i*charsPerGoroutine; j <= 1+(i+1)*charsPerGoroutine; j++ {
+		for j := 1 + i*charsPerGoroutine; j <= (i+1)*charsPerGoroutine; j++ {
 			idChan <- uint32(j)
 		}
 		close(idChan)
@@ -70,7 +71,18 @@ func main() {
 
 	b, err := csvutil.Marshal(creationInfo)
 	if err != nil {
-		fmt.Println("error:", err)
+		log.Fatalln(err)
 	}
-	fmt.Println(string(b))
+
+	f, err := os.Create("characters.csv")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer f.Close()
+
+	_, err = f.Write(b)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
