@@ -10,12 +10,23 @@ import (
 	"github.com/xivapi/godestone/v2"
 )
 
-var characterCount int = 2000
-var parallelism int = 8
+var characterCount int = 20000
+var parallelism int = 10
+
+type Time struct {
+	time.Time
+}
+
+const format = "2006/01/02 15:04:05"
+
+func (t Time) MarshalCSV() ([]byte, error) {
+	var b [len(format)]byte
+	return t.AppendFormat(b[:0], format), nil
+}
 
 type IDCreationInfo struct {
-	ID        uint32    `csv:"id"`
-	CreatedAt time.Time `csv:"created_at"`
+	CreatedAt Time   `csv:"created_at"`
+	ID        uint32 `csv:"id"`
 }
 
 func getCreationInfos(scraper *godestone.Scraper, ids chan uint32, done chan []*IDCreationInfo) {
@@ -34,8 +45,8 @@ func getCreationInfos(scraper *godestone.Scraper, ids chan uint32, done chan []*
 
 			if hasAny {
 				creationInfo = append(creationInfo, &IDCreationInfo{
+					CreatedAt: Time{oldest},
 					ID:        i,
-					CreatedAt: oldest,
 				})
 			}
 		}
