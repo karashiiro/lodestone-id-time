@@ -10,10 +10,9 @@ import (
 	"github.com/xivapi/godestone/v2"
 )
 
-var characterCount uint32 = 20000
-var idOffset uint32 = 10000000
-var parallelism uint32 = 50
-var sampleRate uint32 = 100
+var characterCount uint32 = 33000000
+var parallelism uint32 = 10
+var sampleRate uint32 = 10000
 
 type Time struct {
 	time.Time
@@ -33,10 +32,12 @@ type IDCreationInfo struct {
 
 func getCreationInfos(scraper *godestone.Scraper, ids chan uint32, done chan []*IDCreationInfo) {
 	creationInfo := make([]*IDCreationInfo, 0)
+
+	now := time.Now()
 	for i := range ids {
 		acc, _, err := scraper.FetchCharacterAchievements(i)
 		if err == nil {
-			oldest := time.Now()
+			oldest := now
 			hasAny := false
 			for _, a := range acc {
 				if a.Date.Before(oldest) {
@@ -70,7 +71,7 @@ func main() {
 
 		go getCreationInfos(scraper, idChan, creationInfoChans[i])
 
-		for j := uint32(1+i*charsPerGoroutine) + idOffset; j <= uint32((i+1)*charsPerGoroutine)+idOffset; j += sampleRate {
+		for j := uint32(1 + i*charsPerGoroutine); j <= uint32((i+1)*charsPerGoroutine); j += sampleRate {
 			idChan <- j
 		}
 		close(idChan)
