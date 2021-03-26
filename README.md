@@ -1,5 +1,7 @@
 # lodestone-id-time
-Data scraper, formula and reference implementation for the estimated creation time of a FFXIV character given its Lodestone ID.
+Data scraper, formula and reference implementation for the estimated creation time of a FFXIV character given its Lodestone ID. This formula can be used to get the creation times for any character, including ones with private achievement data.
+
+The creation time is estimated based on the first achievement time of a sample of characters.
 
 ## Reference implementation
 A reference implementation is provided in [reference_impl.py](reference_impl.py).
