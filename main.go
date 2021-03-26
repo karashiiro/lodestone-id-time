@@ -10,9 +10,9 @@ import (
 	"github.com/xivapi/godestone/v2"
 )
 
-var characterCount uint32 = 33000000
+var characterCount uint32 = 330000
 var parallelism uint32 = 10
-var sampleRate uint32 = 10000
+var sampleRate uint32 = 100
 
 type Time struct {
 	time.Time
