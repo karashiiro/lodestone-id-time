@@ -1,13 +1,17 @@
+import numpy as np
 from numpy import sin
 import pandas as pd
 from scipy.optimize import curve_fit
 
 def objective(x, m, b1, a, b2):
+    if np.all(x <= 5000000):
+        return 37.44 / 5000000 + 41539.9318171296
     return b1 + m * x + a * sin(b2 * x)
 
 def main():
     # characters_cvt.csv just has the created_at column converted into float form
     df = pd.read_csv("characters_cvt.csv")
+    df = df[df["id"] > 5000000]
     popt, _ = curve_fit(
         objective,
         df["id"].to_numpy(),
