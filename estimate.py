@@ -5,7 +5,7 @@ from scipy.optimize import curve_fit
 
 def objective(x, m, b1, a, b2):
     if np.all(x <= 5000000):
-        return 37.44 / 5000000 + 41539.93
+        return 37.44 / 5000000 * x + 41539.93
     if np.all(x > 28208601):
         return 305 / 4775200 * x + 42030.57
     return b1 + m * x + a * sin(b2 * x)

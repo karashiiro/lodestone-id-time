@@ -3,7 +3,7 @@ from math import sin, pow
 
 def lodestone_id_time(id):
     if id <= 5000000:
-        excel_time = 37.44 / 5000000 + 41539.93
+        excel_time = 37.44 / 5000000 * id + 41539.93
     elif id > 28208601:
         excel_time = 305.01 / 4775200 * id + 42030.57
     else:
