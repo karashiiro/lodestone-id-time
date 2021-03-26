@@ -5,6 +5,9 @@ Estimate the creation time of a FFXIV character based on its Lodestone ID.
 A reference implementation is provided in [reference_impl.py](reference_impl.py).
 The numbers used are generated from [estimate.py](estimate.py).
 
+## Formula
+![Formula for Excel timestamp calculation of character creation time from a Lodestone ID](formula.png)
+
 ## Graph
 ![Graph showing relationship between Lodestone ID and character creation time](graph.png)
 
