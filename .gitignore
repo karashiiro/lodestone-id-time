@@ -16,3 +16,5 @@
 
 *.csv
 *.xlsx
+
+__pycache__/
