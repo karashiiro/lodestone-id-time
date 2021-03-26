@@ -10,8 +10,18 @@ import (
 	"github.com/xivapi/godestone/v2"
 )
 
+// The number of characters to attempt to fetch. The program will
+// usually get much less than this, since many people keep their
+// achievements private.
 var characterCount uint32 = 330000
+
+// Number of goroutines to execute at once. Setting this too high will
+// get you IP-blocked (can still log into the game).
 var parallelism uint32 = 10
+
+// Number of characters to skip in iteration. Multiply this by
+// the character count to get the maximum ID the program will attempt
+// to fetch.
 var sampleRate uint32 = 100
 
 type Time struct {
