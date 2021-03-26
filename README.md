@@ -10,6 +10,7 @@ The numbers used are generated from [estimate.py](estimate.py).
 
 ## Graph
 ![Graph showing relationship between Lodestone ID and character creation time](graph.png)
+Mean-squared error (Excel timestamp): 7422.162747
 
 ## Notes
 * There's a marked slowdown around the beginning of 2020. If this were redone with
