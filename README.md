@@ -20,3 +20,5 @@ Mean-squared error (Excel timestamp): 7422.162747
   or some proxy for it.
 * The 2020-Now part of the formula might be better approximated with another
   sinusoidal term, but it's unclear yet if that's the case.
+* The large gaps in the data suggest that there's a bug in my thread work distribution,
+  but the data is spread out well regardless of that, so it's a non-issue right now.
