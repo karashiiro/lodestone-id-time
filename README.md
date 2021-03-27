@@ -1,5 +1,5 @@
 # lodestone-id-time
-Data scraper, formula and reference implementation for the estimated creation time of a FFXIV character given its Lodestone ID. This formula can be used to get the creation times for any character, including ones with private achievement data. The creation time is estimated based on the first achievement time of a sample of characters.
+Data scraper, formula and reference implementation for the estimated creation time of a FFXIV character given its Lodestone ID. This formula can be used to get the creation times for any character, including ones with private achievement data. The creation time is estimated based on the first achievement time of a sample of characters. A web interface is also available [here](https://karashiiro.github.io/lodestone-when/).
 
 The formula is subject to change in the future, as more data is collected.
 
