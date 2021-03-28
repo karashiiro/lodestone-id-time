@@ -16,7 +16,7 @@ import (
 var characterCount uint32 = 330000
 
 // Number of goroutines to execute at once. Setting this too high will
-// get you IP-blocked (can still log into the game).
+// get you IP-blocked for a couple of days (can still log into the game).
 var parallelism uint32 = 10
 
 // Number of characters to skip in iteration. Multiply this by
