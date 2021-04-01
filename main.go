@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/jszwec/csvutil"
@@ -47,7 +45,6 @@ func getCreationInfos(scraper *godestone.Scraper, ids chan uint32, done chan []*
 
 	now := time.Now()
 	for i := range ids {
-		fmt.Println(strconv.Itoa(int(i)))
 		acc, _, err := scraper.FetchCharacterAchievements(i)
 		if err == nil {
 			oldest := now
