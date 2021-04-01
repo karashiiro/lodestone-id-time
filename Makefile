@@ -8,8 +8,11 @@ help: ## Show this help
 install: ## Install Python dependencies
 	python -m pip install -r ./requirements.txt
 
-build_scraper: ## Build the Lodestone scraper application
-	go build -ldflags="-s -w"
+build: ## Build the Lodestone scraper application
+	@go build -ldflags="-s -w"
+
+scrape: ## Run the scraper application
+	@./lodestone-id-time
 
 estimate: ## Run the estimation script (requires converting the date column to a number column)
 	python ./estimate.py
