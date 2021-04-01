@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/jszwec/csvutil"
@@ -13,16 +15,16 @@ import (
 // The number of characters to attempt to fetch. The program will
 // usually get much less than this, since many people keep their
 // achievements private.
-var characterCount uint32 = 330000
+var characterCount uint32 = 10
 
 // Number of goroutines to execute at once. Setting this too high will
 // get you IP-blocked for a couple of days (can still log into the game).
-var parallelism uint32 = 10
+var parallelism uint32 = 3
 
 // Number of characters to skip in iteration. Multiply this by
 // the character count to get the maximum ID the program will attempt
 // to fetch.
-var sampleRate uint32 = 100
+var sampleRate uint32 = 2
 
 type Time struct {
 	time.Time
@@ -45,6 +47,7 @@ func getCreationInfos(scraper *godestone.Scraper, ids chan uint32, done chan []*
 
 	now := time.Now()
 	for i := range ids {
+		fmt.Println(strconv.Itoa(int(i)))
 		acc, _, err := scraper.FetchCharacterAchievements(i)
 		if err == nil {
 			oldest := now
@@ -71,7 +74,7 @@ func main() {
 	bin := bingode.New()
 	scraper := godestone.NewScraper(bin, godestone.EN)
 
-	charsPerGoroutine := characterCount / parallelism * sampleRate
+	charsPerGoroutine := characterCount / parallelism
 
 	creationInfo := make([]*IDCreationInfo, 0)
 	creationInfoChans := make([]chan []*IDCreationInfo, parallelism)
@@ -81,9 +84,22 @@ func main() {
 
 		go getCreationInfos(scraper, idChan, creationInfoChans[i])
 
-		for j := uint32(1 + i*charsPerGoroutine); j <= uint32((i+1)*charsPerGoroutine); j += sampleRate {
+		startID := uint32(1+i*charsPerGoroutine) * sampleRate
+		endID := uint32((i+1)*charsPerGoroutine) * sampleRate
+
+		for j := startID; j <= endID; j += sampleRate {
 			idChan <- j
 		}
+
+		// Handle remainder
+		if i == parallelism-1 {
+			remainder := characterCount % parallelism
+			endID += sampleRate
+			for j := uint32(0); j < remainder; j++ {
+				idChan <- endID + sampleRate*j
+			}
+		}
+
 		close(idChan)
 	}
 
