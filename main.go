@@ -17,6 +17,7 @@ var characterCount uint32 = 10
 
 // Number of goroutines to execute at once. Setting this too high will
 // get you IP-blocked for a couple of days (can still log into the game).
+// On non-residential IP addresses the rate limit seems to be way higher.
 var parallelism uint32 = 3
 
 // Number of characters to skip in iteration. Multiply this by
